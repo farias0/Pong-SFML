@@ -3,11 +3,17 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 
+class Pad;
+
+#include "pad.hpp"
+
 class Ball
 {
-	const float 
+	const float
 		INITIAL_SPEED = 0.3f,
-		SPEED_STEP = 0.02f; // how much the speed increases at each step
+		SPEED_STEP = 0.02f, // how much the speed increases at each step
+		PAD_COLLISION_ANGLE = 2.26893f, // 130 degrees
+		PAD_COLLISION_ANGLE_2 = PAD_COLLISION_ANGLE / 2.f;
 
 	const sf::Color
 		COLOR = sf::Color::White;
@@ -23,7 +29,9 @@ class Ball
 	void increaseSpeed();
 
 public:
-	const float RADIUS = 10.f;
+	const float
+		RADIUS = 10.f,
+		DIAMETER = RADIUS * 2.f;
 	
 	float x, y, initX, initY,
 		angle; // should go from 0 to 2*PI -- how to enforce it?
@@ -40,7 +48,7 @@ public:
 		LAUNCH_LEFT_LOWER_BOUND;
 
 	Ball(float screenWidth, float screenHeight);
-	void padCollision();
+	void padCollision(Pad* pad);
 	void wallCollision();
 	void move();
 	void reset();

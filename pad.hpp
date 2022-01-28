@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
+class Ball;
+
 #include "ball.hpp"
 
 class Pad {
@@ -28,6 +31,6 @@ public:
     Pad(float screenWidth, float screenHeight, bool isPadA);
     void goUp();
     void goDown();
-    void followBall(Ball ball);
+    void followBall(Ball* ball);
     void reset();
 };

@@ -32,6 +32,7 @@ using namespace std;
     - consider ball size when checking for collision with lower wall
     - prevent pad from going lower than the lower wall when following ball (wrap in setY())?
     - angle of ball reflection on pad depending on point of contact
+    - generalize line making function
 
     general improvements
     - player B (actual) IA
@@ -93,8 +94,9 @@ sf::RectangleShape makeScreenDiagonal(float angle) {
     return line;
 }
 
-sf::RectangleShape makeBallTrail(float angle) {
-    sf::RectangleShape line = makeScreenDiagonal(angle);
+sf::RectangleShape makeBallTrail(Ball ball) {
+    sf::RectangleShape line = makeScreenDiagonal(ball.angle);
+    line.setPosition(sf::Vector2f(ball.x, ball.y));
     line.setFillColor(sf::Color::Yellow);
     return line;
 }
@@ -201,15 +203,18 @@ int main()
         }
 
         ball.move();
-        padB.followBall(ball);
+        padB.followBall(&ball);
 
         if (collision::check(&ball, 0.f) || collision::check(&ball, SCREEN_HEIGHT)) {
             ball.wallCollision();
         }
 
-        if (collision::check(&ball, &padA) || collision::check(&ball, &padB)) {
-            ball.padCollision();
-        } 
+        if (collision::check(&ball, &padA)) {
+            ball.padCollision(&padA);
+        }
+        else if (collision::check(&ball, &padB)) {
+            ball.padCollision(&padB);
+        }
         else if (ball.x < padA.x) {
             score.playerB++;
             resetGame();
@@ -229,7 +234,7 @@ int main()
             window.draw(makeScreenDiagonal(ball.LAUNCH_LEFT_LOWER_BOUND));
             window.draw(makeScreenDiagonal(ball.LAUNCH_RIGHT_LOWER_BOUND));
 
-            window.draw(makeBallTrail(ball.angle));
+            window.draw(makeBallTrail(ball));
             // window.draw(makeFpsText(font, "FPS: " + std::to_string(fps)));
         }
 

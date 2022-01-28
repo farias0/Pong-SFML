@@ -7,6 +7,10 @@
 
 #include "ball.hpp"
 
+class Pad;
+
+#include "pad.hpp"
+
 using namespace std;
 
 void Ball::updateRenderPos() {
@@ -20,13 +24,10 @@ float Ball::calcLaunchAngle() {
 	while (a == 0) { // make sure float 0 == int 0
 		float rand = (float) this->distr(this->gen); // random float from 0 to 2 * PI
 
-		// cout << "\ncalculated launch angle: " << rand;
-
 		if (rand < LAUNCH_LEFT_UPPER_BOUND || // from 0 to the 1st bound (half the right cone)
 			(rand > LAUNCH_RIGHT_UPPER_BOUND && rand <= LAUNCH_RIGHT_LOWER_BOUND) || // from the 2nd to the 3rd bound (the left cone)
 			rand > LAUNCH_LEFT_LOWER_BOUND) { // from the 4th bound to 2*pi (the other half of the right cone)
 			a = rand;
-			//	cout << ": accepted";
 		}
 	}
 
@@ -35,7 +36,6 @@ float Ball::calcLaunchAngle() {
 
 void Ball::increaseSpeed() {
 	currentSpeed += SPEED_STEP;
-	cout << "\nspeed: " << currentSpeed;
 }
 
 Ball::Ball(float screenWidth, float screenHeight) {
@@ -68,8 +68,7 @@ void Ball::move() {
 	updateRenderPos();
 }
 
-// inverts on y axis
-void Ball::padCollision() {
+void Ball::padCollision(Pad* pad) {
 	// varies depending on quadrant so we can ensure angle stays 0 <= angle < 2*pi
 	if (angle <= (float)M_PI) {
 		angle = (float)M_PI - angle;
@@ -80,6 +79,42 @@ void Ball::padCollision() {
 	else {
 		angle = (3.f * (float)M_PI) - angle;
 	}
+
+	// sketch to a routine where the ball angle varies on where it connected with the pad
+	// 
+	//// to account for the ball, we're using a virtual pad size PAD + BALL
+	//// we shouldnt need to calculate this values at every collision
+	//const float padTop = pad->y - DIAMETER;
+	//const float padBottom = pad->y + pad->SIZE_Y;
+	//const float padSize = pad->SIZE_Y + DIAMETER;
+
+	//// 0 to 1, top to bottom
+	//const float normalized = (y - padTop) / padSize;
+
+	//bool isPadA = (angle > M_PI_2) && (angle < (M_PI + M_PI_2));
+
+	//// there must be a more elegant way to make this calculation
+	//if (normalized <= 0.5f) { // upper half of the pad
+	//	angle = (-1 * normalized * PAD_COLLISION_ANGLE) + PAD_COLLISION_ANGLE_2;
+	//}
+	//else { // lower half of the pad
+	//	angle = (2.f * M_PI) - ((normalized - 0.5f) * PAD_COLLISION_ANGLE) + PAD_COLLISION_ANGLE_2;
+	//}
+
+
+	//if (!isPadA) { // invert on Y axis -- TEMPORARY!
+	//	if (angle <= (float)M_PI) {
+	//		angle = (float)M_PI - angle;
+	//	}
+	//	else if (angle <= (float)M_PI + (float)M_PI_2) {
+	//		angle = (2.f * (float)M_PI) - (angle - (float)M_PI);
+	//	}
+	//	else {
+	//		angle = (3.f * (float)M_PI) - angle;
+	//	}
+	//}
+
+	//cout << "\nnormalized: " << normalized << " angle: " << angle;
 
 	increaseSpeed();
 	updateRenderPos();

@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 
+class Ball;
+
 #include "pad.hpp"
 #include "ball.hpp"
 
@@ -35,8 +37,8 @@ void Pad::goDown() {
     updateRenderPos();
 }
 
-void Pad::followBall(Ball ball) {
-    y = ball.y - (SIZE_Y / 2);
+void Pad::followBall(Ball* ball) {
+    y = ball->y - (SIZE_Y / 2);
     if (y < 0) {
         y = 0;
     }
