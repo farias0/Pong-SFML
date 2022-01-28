@@ -31,12 +31,12 @@ using namespace std;
     - integrate render position with entity position
     - consider ball size when checking for collision with lower wall
     - prevent pad from going lower than the lower wall when following ball (wrap in setY())?
-    - ball speed increase
     - angle of ball reflection on pad depending on point of contact
 
     general improvements
     - player B (actual) IA
     - timer before launching ball
+    - ball speed ceiling?
     - use int instead of float for screen position stuff
     - screen width/height as global var instead of passing as param
     - sound/menu/general polish

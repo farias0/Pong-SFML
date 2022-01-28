@@ -5,10 +5,14 @@
 
 class Ball
 {
-	const float SPEED = 0.5f;
+	const float 
+		INITIAL_SPEED = 0.3f,
+		SPEED_STEP = 0.02f; // how much the speed increases at each step
 
 	const sf::Color
 		COLOR = sf::Color::White;
+
+	float currentSpeed;
 
 	//rng stuff
 	std::mt19937 gen;
@@ -16,6 +20,7 @@ class Ball
 
 	void updateRenderPos();
 	float calcLaunchAngle();
+	void increaseSpeed();
 
 public:
 	const float RADIUS = 10.f;

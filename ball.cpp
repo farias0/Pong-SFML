@@ -33,11 +33,14 @@ float Ball::calcLaunchAngle() {
 	return a;
 }
 
+void Ball::increaseSpeed() {
+	currentSpeed += SPEED_STEP;
+	cout << "\nspeed: " << currentSpeed;
+}
+
 Ball::Ball(float screenWidth, float screenHeight) {
 	initX = screenWidth / 2.f;
 	initY = screenHeight / 2.f;
-	x = initX;
-	y = initY;
 
 	// set launch parameters
 	const float screenDiagonalAngle = atan((float)screenHeight / (float)screenWidth);
@@ -55,14 +58,13 @@ Ball::Ball(float screenWidth, float screenHeight) {
 	this->renderObj = sf::CircleShape();
 	this->renderObj.setRadius(RADIUS);
 	this->renderObj.setFillColor(COLOR);
-	updateRenderPos();
 
-	angle = calcLaunchAngle();
+	reset();
 }
 
 void Ball::move() {
-	x += cos(angle) * SPEED;
-	y += sin(angle) * SPEED;
+	x += cos(angle) * currentSpeed;
+	y += sin(angle) * currentSpeed;
 	updateRenderPos();
 }
 
@@ -78,6 +80,8 @@ void Ball::padCollision() {
 	else {
 		angle = (3.f * (float)M_PI) - angle;
 	}
+
+	increaseSpeed();
 	updateRenderPos();
 }
 
@@ -90,6 +94,7 @@ void Ball::wallCollision() {
 void Ball::reset() {
 	x = initX;
 	y = initY;
+	currentSpeed = INITIAL_SPEED;
 	angle = calcLaunchAngle();
 	updateRenderPos();
 }
